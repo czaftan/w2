@@ -7,15 +7,6 @@
 	<name>RESTServer Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
-	<!-- <repositories> -->
-	<!-- <repository> -->
-	<!-- <id>maven2-repository.java.net</id> -->
-	<!-- <name>Java.net Repository for Maven</name> -->
-	<!-- <url>http://download.java.net/maven/2/</url> -->
-	<!-- <layout>default</layout> -->
-	<!-- </repository> -->
-	<!-- </repositories> -->
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -25,9 +16,26 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>2.17</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-			<version>2.6</version>
+			<artifactId>jersey-container-servlet-core</artifactId>
+			<version>2.17</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>3.5.2</version>
 		</dependency>
 
 	</dependencies>
@@ -50,12 +58,6 @@
 					<requestLog implementation="org.mortbay.jetty.NCSARequestLog">
 						<append>true</append>
 					</requestLog>
-					<systemProperties>
-						<systemProperty>
-							<name>tapestry.execution-mode</name>
-							<value>development</value>
-						</systemProperty>
-					</systemProperties>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -1,0 +1,4 @@
+/ViewServer/ViewServer/target/classes/cz/wa2/restserver/application/*.class
+/ViewServer/ViewServer/target/classes/cz/wa2/restserver/controller/*.class
+/ViewServer/ViewServer/target/classes/cz/wa2/viewserver/object/*.class
+/ViewServer/ViewServer/target/classes/*.js

@@ -76,12 +76,6 @@
 					<requestLog implementation="org.mortbay.jetty.NCSARequestLog">
 						<append>true</append>
 					</requestLog>
-					<systemProperties>
-						<systemProperty>
-							<name>tapestry.execution-mode</name>
-							<value>development</value>
-						</systemProperty>
-					</systemProperties>
 				</configuration>
 			</plugin>
 		</plugins>

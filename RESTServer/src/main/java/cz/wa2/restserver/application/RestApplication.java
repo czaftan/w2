@@ -9,7 +9,7 @@ import javax.ws.rs.core.Application;
 
 import cz.wa2.restserver.controller.MainController;
 
-@ApplicationPath("/test")
+@ApplicationPath("/")
 public class RestApplication extends Application {
 
 	public Set<Class<?>> getClasses() {
