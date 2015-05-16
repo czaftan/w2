@@ -37,8 +37,6 @@ public class MainController {
 
 	@POST
 	@Path("/report")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response report(MultivaluedMap<String, String> formParams) {
 		JSONArray params = new JSONArray(formParams.getFirst("data"));
 		JSONObject obj = params.getJSONObject(0);
