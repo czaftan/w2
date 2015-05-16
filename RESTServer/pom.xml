@@ -37,6 +37,19 @@
 			<artifactId>amqp-client</artifactId>
 			<version>3.5.2</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.8.Final</version>
+		</dependency>	
+
+		<dependency>
+			<groupId>cz.wa2</groupId>
+			<artifactId>Entities</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 

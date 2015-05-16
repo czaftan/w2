@@ -63,6 +63,7 @@ public class Main {
 			row.put(e.getPage().toString());
 			row.put(e.getPage().getApplication().toString());
 			row.put(e.getUser().toString());
+			row.put(e.getComment());
 			// Tohle by se melo generovat na klientovi, ale takhle je to jednodussi :-)
 			row.put("<button type='button' id='" + e.getId() + "'>SHOW SCREENSHOT</button>");
 			row.put("<button type='button' id='" + e.getId() + "'>CANCEL</button>");
