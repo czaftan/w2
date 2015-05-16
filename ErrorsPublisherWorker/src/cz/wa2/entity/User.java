@@ -30,4 +30,9 @@ public class User {
 		this.fqn = fqn;
 	}
 
+	@Override
+	public String toString() {
+		return fqn + "(" + email + ")";
+	}
+
 }

@@ -40,5 +40,8 @@ public class Page {
 		this.application = application;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return title + ": " + url;
+	}
 }

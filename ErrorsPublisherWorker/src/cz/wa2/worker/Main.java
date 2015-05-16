@@ -60,8 +60,9 @@ public class Main {
 			JSONArray row = new JSONArray();
 			row.put(e.getId());
 			row.put(e.getMessage());
-			row.put(e.getPage());
-			row.put(e.getUser());
+			row.put(e.getPage().toString());
+			row.put(e.getPage().getApplication().toString());
+			row.put(e.getUser().toString());
 			// Tohle by se melo generovat na klientovi, ale takhle je to jednodussi :-)
 			row.put("<button type='button' id='" + e.getId() + "'>SHOW SCREENSHOT</button>");
 			row.put("<button type='button' id='" + e.getId() + "'>CANCEL</button>");

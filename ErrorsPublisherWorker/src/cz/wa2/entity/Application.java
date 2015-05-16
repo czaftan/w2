@@ -30,4 +30,8 @@ public class Application {
 		this.admin = admin;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
