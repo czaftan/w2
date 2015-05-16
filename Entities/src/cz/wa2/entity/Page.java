@@ -3,14 +3,16 @@ package cz.wa2.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Page")
 public class Page {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
@@ -20,7 +22,7 @@ public class Page {
 	@Column(name = "url")
 	private String url;
 	
-	@Column(name = "application")
+	@OneToOne
 	private Application application;
 	
 	public Long getId() {
