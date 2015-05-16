@@ -21,6 +21,11 @@
    <property name="hibernate.connection.password">
       seremeto
    </property>
+   
+   <mapping class="cz.wa2.entity.User" />
+   <mapping class="cz.wa2.entity.Application" />
+   <mapping class="cz.wa2.entity.Error" />
+   <mapping class="cz.wa2.entity.Page" />
 
 </session-factory>
 </hibernate-configuration>

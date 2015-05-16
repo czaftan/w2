@@ -37,8 +37,6 @@ public class MainController {
 
 	@POST
 	@Path("/report")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response report(MultivaluedMap<String, String> formParams) {
 		JSONArray params = new JSONArray(formParams.getFirst("data"));
 		JSONObject obj = params.getJSONObject(0);
@@ -50,25 +48,25 @@ public class MainController {
 		String email = "dummy@dummy.com";
 		String title = "";
 		
-		StandardServiceRegistry serviceRegistry;
-	    SessionFactory sessionFactory;
-		Configuration configuration = new Configuration().configure();
-        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-        sessionFactory = configuration.configure().buildSessionFactory(serviceRegistry);
-		
-        Session session = sessionFactory.openSession();
-
-        session.beginTransaction();
-
-        User a = new User();
-        a.setEmail("a@b.cz");
-        a.setFqn("magor");
-        
-        session.save(a);
-        
-
-        session.getTransaction().commit();
-        session.close();
+//		StandardServiceRegistry serviceRegistry;
+//	    SessionFactory sessionFactory;
+//		Configuration configuration = new Configuration().configure();
+//        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+//        sessionFactory = configuration.configure().buildSessionFactory(serviceRegistry);
+//		
+//        Session session = sessionFactory.openSession();
+//
+//        session.beginTransaction();
+//
+//        User a = new User();
+//        a.setEmail("a@b.cz");
+//        a.setFqn("magor");
+//        
+//        session.save(a);
+//        
+//
+//        session.getTransaction().commit();
+//        session.close();
 		
 		// TODO: Ulozit do DB
 		return Response.ok().build();

@@ -2,3 +2,10 @@
 /ViewServer/ViewServer/target/classes/cz/wa2/restserver/controller/*.class
 /ViewServer/ViewServer/target/classes/cz/wa2/viewserver/object/*.class
 /ViewServer/ViewServer/target/classes/*.js
+target
+
+RESTServer/target/classes/cz/wa2/restserver/application/RestApplication.class
+*.class
+*.class
+RESTServer/target/classes/cz/wa2/restserver/application/RestApplication.class
+*.lst

@@ -3,21 +3,24 @@ package cz.wa2.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "Errors")
 public class Error {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "message", nullable = true)
 	private String message;
 	
-	@Column(name = "user_id")
+	@OneToOne
 	private User user;
 	
 	@Column(name = "canceled")
@@ -29,7 +32,7 @@ public class Error {
 	@Column(name = "screenshot", nullable = true)
 	private String screenshot;
 	
-	@Column(name = "page_id")
+	@OneToOne
 	private Page page;
 	
 	@Column(name = "comment", nullable = true)
