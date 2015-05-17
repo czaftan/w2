@@ -7,6 +7,7 @@
 	type="text/javascript"></script>
 <script>
 	var oTable;
+	var uri = "";
 	$(document).ready(function() {
 		oTable = $('#table').DataTable({});
 
@@ -14,8 +15,6 @@
 		$.ajax({
 			url : "getAll",
 		}).done(function(data) {
-			// Obnovi data v tabulce
-			oTable.ajax.url(data);
 			createTableData(data);
 		});
 	});
@@ -23,13 +22,58 @@
 	function createTableData(data) {
 		$.ajax({
 			url : data,
+			crossDomain : true,
 			success : function(data) {
-				oTable.ajax.reload();
+				$('#table').dataTable().fnAddData(JSON.parse(data));
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
 				if (xhr.status == 404) {
 					setTimeout(function() {
-						createTableData(data)
+						createTableData(data);
+					}, 1000);
+				}
+			}
+		});
+	}
+
+	$(document).on("click", "button.screenshot", function() {
+		var self = $(this);
+		var id = self.attr("id");
+		getPicture(id);
+	});
+	
+	$(document).on("click", "button.resolve", function() {
+		var self = $(this);
+		var id = self.attr("id");
+		$.ajax({
+			url : "resolve?id=" + id,
+			success : function(data) {
+				$("#table #" + id + ".resolve").attr("disabled", "disabled");
+			}
+		});
+	});
+	
+	$(document).on("click", "button.cancel", function() {
+		var self = $(this);
+		var id = self.attr("id");
+		$.ajax({
+			url : "delete?id=" + id,
+			success : function(data) {
+				$("#table #" + id + ".resolve").attr("disabled", "disabled");
+			}
+		});
+	});
+	
+	function getPicture(id) {
+		$.ajax({
+			url : "getPicture?id=" + id,
+			success : function(data) {
+				$("#img").attr("src", data);
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				if (xhr.status == 404) {
+					setTimeout(function() {
+						getPicture(id);
 					}, 1000);
 				}
 			}
@@ -41,9 +85,18 @@
 	<table id='table'>
 		<thead>
 			<tr>
-				<th>Test</th>
+				<th>ID</th>
+				<th>Message</th>
+				<th>Page</th>
+				<th>Application</th>
+				<th>User</th>
+				<th>Comment</th>
+				<th>Screenshot</th>
+				<th>Cancel</th>
+				<th>Resolve</th>
 			</tr>
 		</thead>
 	</table>
+	<img id='img' src='' />
 </body>
 </html>

@@ -46,6 +46,7 @@ public class Main {
 				arrrrItsPoisoned(message);
 			}
 			System.out.println(" [x] Done");
+			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
 	}
 

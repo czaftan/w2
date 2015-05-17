@@ -18,6 +18,11 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import com.rabbitmq.client.QueueingConsumer;
 
+import cz.wa2.entity.Application;
+import cz.wa2.entity.Error;
+import cz.wa2.entity.Page;
+import cz.wa2.entity.User;
+
 public class Main {
 
 	private static final String PUBLISH_ERRORS_TASK_QUEUE = "publish_error";
@@ -51,6 +56,7 @@ public class Main {
 				arrrrItsPoisoned(message);
 			}
 			System.out.println(" [x] Done");
+			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
 	}
 
@@ -61,6 +67,29 @@ public class Main {
 		// TODO: ziskat data z DB do errors
 		JSONArray data = new JSONArray();
 		List<cz.wa2.entity.Error> errors = new ArrayList<cz.wa2.entity.Error>();
+		Error er = new Error();
+		er.setCanceled(false);
+		er.setComment("test");
+		er.setId(0l);
+		er.setMessage("message");
+		Page p = new Page();
+		p.setId(0l);
+		p.setTitle("title");
+		p.setUrl("url");
+		Application a = new Application();
+		a.setAdmin("admin");
+		a.setId(0l);
+		a.setName("app");
+		p.setApplication(a);
+		er.setPage(p);
+		er.setResolved(false);
+		er.setScreenshot("");
+		User u = new User();
+		u.setEmail("email");
+		u.setFqn("fqn");
+		u.setId(0l);
+		er.setUser(u);
+		errors.add(er);
 		for (cz.wa2.entity.Error e : errors) {
 			JSONArray row = new JSONArray();
 			row.put(e.getId());
@@ -70,9 +99,9 @@ public class Main {
 			row.put(e.getUser().toString());
 			row.put(e.getComment());
 			// Tohle by se melo generovat na klientovi, ale takhle je to jednodussi :-)
-			row.put("<button type='button' id='" + e.getId() + "'>SHOW SCREENSHOT</button>");
-			row.put("<button type='button' id='" + e.getId() + "'>CANCEL</button>");
-			row.put("<button type='button' id='" + e.getId() + "'>RESOLVE</button>");
+			row.put("<button type='button' class='screenshot' id='" + e.getId() + "'>SHOW SCREENSHOT</button>");
+			row.put("<button type='button'" + (e.isCanceled() ? "disabled='disabled'" : "") + " class='cancel' id='" + e.getId() + "'>CANCEL</button>");
+			row.put("<button type='button'" + (e.isResolved() ? "disabled='disabled'" : "") + " class='resolve' id='" + e.getId() + "'>RESOLVE</button>");
 			data.put(row);
 		}
 		String publishableData = data.toString();

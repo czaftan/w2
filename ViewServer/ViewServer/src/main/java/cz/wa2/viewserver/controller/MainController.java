@@ -52,14 +52,14 @@ public class MainController {
 	@RequestMapping("/delete")
 	public ResponseEntity<String> delete(@RequestParam(value = "id") String id) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> confirm = restTemplate.getForEntity(serverLink + "delete?id=" + id, String.class);
+		ResponseEntity<String> confirm = restTemplate.getForEntity(serverLink + "delete/" + id, String.class);
 		return confirm;
 	}
 
 	@RequestMapping("/resolve")
 	public ResponseEntity<String> resolve(@RequestParam(value = "id") String id) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> confirm = restTemplate.getForEntity(serverLink + "resolve?id=" + id, String.class);
+		ResponseEntity<String> confirm = restTemplate.getForEntity(serverLink + "resolve/" + id, String.class);
 		return confirm;
 	}
 }

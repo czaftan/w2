@@ -99,7 +99,7 @@ public class MainController {
 		channel.close();
 		connection.close();
 
-		return uri;
+		return "http://localhost:8083" + uri;
 	}
 
 	@GET
@@ -127,7 +127,7 @@ public class MainController {
 		channel.close();
 		connection.close();
 
-		return uri;
+		return "http://localhost:8083" + uri;
 	}
 
 	@GET
