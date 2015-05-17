@@ -52,7 +52,7 @@ public class Main {
 		// TODO: get screenshot z DB podle id
 		String image = "";
 		byte[] data = Base64.decodeBase64(image);
-		try (OutputStream stream = new FileOutputStream(uri)) {
+		try (OutputStream stream = new FileOutputStream("../publish/" + uri)) {
 			stream.write(data);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,6 +1,7 @@
 package cz.wa2.worker;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -73,7 +74,7 @@ public class Main {
 		String publishableData = data.toString();
 		Writer writer = null;
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(uri), "utf-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("../publish" + uri), "utf-8"));
 			writer.write(publishableData);
 		} catch (IOException e) {
 			e.printStackTrace();

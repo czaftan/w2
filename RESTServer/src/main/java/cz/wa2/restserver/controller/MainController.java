@@ -119,10 +119,10 @@ public class MainController {
 		task.put("uri", uri);
 		String message = task.toString();
 
-		channel.basicPublish("", PUBLISH_IMAGE_TASK_QUEUE,
+		channel.basicPublish("", PUBLISH_ERRORS_TASK_QUEUE,
 				MessageProperties.PERSISTENT_TEXT_PLAIN,
 				message.getBytes());
-		System.out.println("Task PUBLISH_ERRORS queued: " + message + "'");
+		System.out.println("Task PUBLISH_ERRORS queued: " + message + "");
 
 		channel.close();
 		connection.close();
