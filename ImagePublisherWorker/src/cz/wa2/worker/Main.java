@@ -79,15 +79,20 @@ public class Main {
         List<cz.wa2.entity.Error> errors = query.list();
         
         session.close();
-        
-        cz.wa2.entity.Error error = errors.get(0);
+        cz.wa2.entity.Error error;
+        try {
+        	error = errors.get(0);
+        } catch(Exception e) {
+        	throw new WorkerException();
+        }
 		
 		String image = error.getScreenshot();
-		byte[] data = Base64.decodeBase64(image);
+		byte[] data = image == null || image.isEmpty() ? new byte[0] : Base64.decodeBase64(image);
 		try (OutputStream stream = new FileOutputStream("../publish/" + uri)) {
 			stream.write(data);
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new WorkerException();
 		}
 	}
 

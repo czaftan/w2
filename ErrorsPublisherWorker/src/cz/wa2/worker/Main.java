@@ -117,6 +117,7 @@ public class Main {
 			writer.write(publishableData);
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new WorkerException();
 		} finally {
 			try {
 				writer.close();
