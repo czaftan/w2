@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.StaleStateException;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -88,6 +90,7 @@ public class Main {
 		JSONArray data = new JSONArray();
 
 		for (cz.wa2.entity.Error e : errors) {
+			
 			JSONArray row = new JSONArray();
 			row.put(e.getId());
 			row.put(e.getMessage());

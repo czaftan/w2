@@ -74,17 +74,18 @@ public class Main {
 		
 		Session session = sessionFactory.openSession();
         
-        Query query = session.createQuery("FROM Error E WHERE E.id = " + id);
+//        Query query = session.createQuery("FROM Error E WHERE E.id = " + id);
+//        query.setMaxResults(1);
+//        List<cz.wa2.entity.Error> errors = query.list();
         
-        List<cz.wa2.entity.Error> errors = query.list();
         
-        session.close();
         cz.wa2.entity.Error error;
-        try {
-        	error = errors.get(0);
-        } catch(Exception e) {
-        	throw new WorkerException();
-        }
+        	error = (cz.wa2.entity.Error) session.get(
+					cz.wa2.entity.Error.class, id);
+    	session.close();
+
+    	if(error == null)
+    		throw new WorkerException();
 		
 		String image = error.getScreenshot();
 		byte[] data = image == null || image.isEmpty() ? new byte[0] : Base64.decodeBase64(image);

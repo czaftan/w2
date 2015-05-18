@@ -1,5 +1,7 @@
 package cz.wa2.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "Errors")
@@ -40,6 +45,24 @@ public class Error {
 	
 	@Column(name = "comment", nullable = true)
 	private String comment;
+	
+	@Column(name = "report_url_time", nullable = true, columnDefinition="DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date reportUrlDate;
+	
+	@Column(name = "report_url", nullable = true)
+	private String reportUrl;
+	
+	@Column(name = "screen_url_time", nullable = true, columnDefinition="DATETIME")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date screenUrlDate;
+	
+	@Column(name = "screen_url", nullable = true)
+	private String screenUrl;
+	
+	@Version
+	@Column(name = "optlock")
+	private Integer optlock;
 
 	public Long getId() {
 		return id;
@@ -103,6 +126,46 @@ public class Error {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Date getReportUrlDate() {
+		return reportUrlDate;
+	}
+
+	public void setReportUrlDate(Date reportUrlDate) {
+		this.reportUrlDate = reportUrlDate;
+	}
+
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
+
+	public Date getScreenUrlDate() {
+		return screenUrlDate;
+	}
+
+	public void setScreenUrlDate(Date screenUrlDate) {
+		this.screenUrlDate = screenUrlDate;
+	}
+
+	public String getScreenUrl() {
+		return screenUrl;
+	}
+
+	public void setScreenUrl(String screenUrl) {
+		this.screenUrl = screenUrl;
+	}
+
+	public Integer getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(Integer optlock) {
+		this.optlock = optlock;
 	}
 
 }
