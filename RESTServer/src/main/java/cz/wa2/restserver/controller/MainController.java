@@ -168,7 +168,7 @@ public class MainController {
 		channel.close();
 		connection.close();
 
-		return uri;
+		return "http://localhost:8083" + uri;
 	}
 
 	@GET
@@ -191,12 +191,12 @@ public class MainController {
 		channel.basicPublish("", PUBLISH_ERRORS_TASK_QUEUE,
 				MessageProperties.PERSISTENT_TEXT_PLAIN,
 				message.getBytes());
-		System.out.println("Task PUBLISH_ERRORS queued: " + message + "'");
+		System.out.println("Task PUBLISH_ERRORS queued: " + message + "");
 
 		channel.close();
 		connection.close();
 
-		return uri;
+		return "http://localhost:8083" + uri;
 	}
 
 	@GET
