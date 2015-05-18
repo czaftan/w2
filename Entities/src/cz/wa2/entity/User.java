@@ -18,6 +18,9 @@ public class User {
 	@Column(name = "email")
 	private String email;
 	
+	@Column(name = "email_hash")
+	private String emailHash;
+	
 	@Column(name = "fqn")
 	private String fqn;
 
@@ -35,6 +38,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getEmailHash() {
+		return emailHash;
+	}
+
+	public void setEmailHash(String emailHash) {
+		this.emailHash = emailHash;
 	}
 
 	public String getFqn() {

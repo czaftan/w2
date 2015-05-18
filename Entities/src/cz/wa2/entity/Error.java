@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -21,6 +22,7 @@ public class Error {
 	private String message;
 	
 	@OneToOne
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@Column(name = "canceled")
@@ -33,6 +35,7 @@ public class Error {
 	private String screenshot;
 	
 	@OneToOne
+	@JoinColumn(name = "page_id")
 	private Page page;
 	
 	@Column(name = "comment", nullable = true)

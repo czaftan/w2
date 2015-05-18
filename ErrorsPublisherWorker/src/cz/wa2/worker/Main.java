@@ -8,6 +8,12 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,6 +25,15 @@ import com.rabbitmq.client.QueueingConsumer;
 public class Main {
 
 	private static final String PUBLISH_ERRORS_TASK_QUEUE = "publish_error";
+	
+	private static StandardServiceRegistry serviceRegistry;
+    private static SessionFactory sessionFactory;
+    
+    static {
+    	Configuration configuration = new Configuration().configure();
+        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        sessionFactory = configuration.configure().buildSessionFactory(serviceRegistry);
+    }
 
 	public static void main(String[] argv)
 			throws java.io.IOException,
@@ -45,7 +60,7 @@ public class Main {
 			doWork(message);
 			System.out.println(" [x] Done");
 
-			//channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
 	}
 
@@ -53,9 +68,16 @@ public class Main {
 		JSONObject msg = new JSONObject(message);
 		String uri = msg.getString("uri");
 
-		// TODO: ziskat data z DB do errors
+		Session session = sessionFactory.openSession();
+        
+        Query query = session.createQuery("FROM Error");
+        
+        List<cz.wa2.entity.Error> errors = query.list();
+        
+        session.close();
+		
 		JSONArray data = new JSONArray();
-		List<cz.wa2.entity.Error> errors = new ArrayList<cz.wa2.entity.Error>();
+		
 		for (cz.wa2.entity.Error e : errors) {
 			JSONArray row = new JSONArray();
 			row.put(e.getId());

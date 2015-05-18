@@ -3,8 +3,15 @@ package cz.wa2.worker;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.json.JSONObject;
 
 import com.rabbitmq.client.Channel;
@@ -15,6 +22,15 @@ import com.rabbitmq.client.QueueingConsumer;
 public class Main {
 
 	private static final String PUBLISH_IMAGE_TASK_QUEUE = "publish_image";
+	
+	private static StandardServiceRegistry serviceRegistry;
+    private static SessionFactory sessionFactory;
+    
+    static {
+    	Configuration configuration = new Configuration().configure();
+        serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        sessionFactory = configuration.configure().buildSessionFactory(serviceRegistry);
+    }
 
 	public static void main(String[] argv)
 			throws java.io.IOException,
@@ -50,7 +66,18 @@ public class Main {
 		Long id = msg.getLong("id");
 		String uri = msg.getString("uri");
 		// TODO: get screenshot z DB podle id
-		String image = "";
+		
+		Session session = sessionFactory.openSession();
+        
+        Query query = session.createQuery("FROM Error E WHERE E.id = " + id);
+        
+        List<cz.wa2.entity.Error> errors = query.list();
+        
+        session.close();
+        
+        cz.wa2.entity.Error error = errors.get(0);
+		
+		String image = error.getScreenshot();
 		byte[] data = Base64.decodeBase64(image);
 		try (OutputStream stream = new FileOutputStream(uri)) {
 			stream.write(data);

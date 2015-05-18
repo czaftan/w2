@@ -19,6 +19,9 @@ public class Application {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name = "name_hash")
+	private String nameHash;
+	
 	@Column(name = "admin")
 	private String admin;
 
@@ -36,6 +39,14 @@ public class Application {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getNameHash() {
+		return nameHash;
+	}
+
+	public void setNameHash(String nameHash) {
+		this.nameHash = nameHash;
 	}
 
 	public String getAdmin() {

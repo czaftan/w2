@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,7 +23,11 @@ public class Page {
 	@Column(name = "url")
 	private String url;
 	
+	@Column(name = "url_hash")
+	private String urlHash;
+	
 	@OneToOne
+	@JoinColumn(name = "application")
 	private Application application;
 	
 	public Long getId() {
@@ -47,6 +52,14 @@ public class Page {
 	
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	public String getUrlHash() {
+		return urlHash;
+	}
+	
+	public void setUrlHash(String urlHash) {
+		this.urlHash = urlHash;
 	}
 	
 	public Application getApplication() {
