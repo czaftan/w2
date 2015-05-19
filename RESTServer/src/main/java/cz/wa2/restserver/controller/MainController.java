@@ -1,8 +1,11 @@
 package cz.wa2.restserver.controller;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -39,6 +42,7 @@ public class MainController {
 
 	private static final String PUBLISH_IMAGE_TASK_QUEUE = "publish_image";
 	private static final String PUBLISH_ERRORS_TASK_QUEUE = "publish_error";
+	private static final String FILE_STERVER = "http://localhost:8083";
 	private static final int CACHE_TIME_MINUTES = 5;
 
 	private StandardServiceRegistry serviceRegistry;
@@ -148,59 +152,66 @@ public class MainController {
 	public String getPicture(@PathParam("errorId") Long errorId)
 			throws IOException, TimeoutException {
 		// musi vracet cestu k publishnutemu obrazku
-		
+
 		String uri = "";
-		
+
 		boolean notFinished = true;
 		int counter = 3;
 		while (notFinished) {
-			
+
 			Session session = sessionFactory.openSession();
 			session.beginTransaction();
-			
+
 			cz.wa2.entity.Error error = (cz.wa2.entity.Error) session.get(cz.wa2.entity.Error.class, errorId);
-			
-			
-			if(error.getScreenshot() == null) {
-				//no screenshot to generate
+
+			if (error.getScreenshot() == null) {
+				// no screenshot to generate
 				session.getTransaction().commit();
 				session.close();
 				break;
 			}
-			
+
 			boolean generate = false;
-			if(error.getScreenUrlDate() == null) {
+			if (error.getScreenUrlDate() == null) {
 				generate = true;
 			} else {
-				//TODO: check if file exists. If true, send the url (don't forget the localhost etc). Else generate
-				//TODO: and don't forget to commit and close the session
-				
+				uri = FILE_STERVER + error.getScreenUrl();
+				URL u = new URL(uri);
+				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+				huc.setRequestMethod("GET");
+				huc.connect();
+				int code = huc.getResponseCode();
+				if (code != 200) {
+					generate = true;
+				}
 				session.getTransaction().commit();
-				session.close();						
-				return "http://localhost:8083" + error.getScreenUrl();
+				session.close();
+				if (code == 200) {
+					return uri;
+				}
 			}
-			
-			if(generate) {
+
+			if (generate) {
 				UUID imageName = UUID.randomUUID();
 				uri = "/images/" + imageName + ".png";
-				
+
 				try {
 					error.setScreenUrl(uri);
-					error.setScreenUrlDate(new Date());	
+					error.setScreenUrlDate(new Date());
 					session.merge(error);
-		
+
 					session.getTransaction().commit();
 					notFinished = false;
 				} catch (StaleStateException e) {
 					session.getTransaction().rollback();
-					if (counter > 0) {			
+					if (counter > 0) {
 						--counter;
 						continue;
-					} //in else case it just gives up on caching it
+					} // in else case it just gives up on caching it
 				} finally {
 					session.close();
-				}	
-				
+				}
+
 				ConnectionFactory factory = new ConnectionFactory();
 				factory.setHost("localhost");
 				Connection connection = factory.newConnection();
@@ -219,88 +230,95 @@ public class MainController {
 
 				channel.close();
 				connection.close();
-			}	
-			
-			if(session.isOpen())
-				session.close();
-		}		
+			}
 
-		return "http://localhost:8083" + uri;
+			if (session.isOpen())
+				session.close();
+		}
+
+		return FILE_STERVER + uri;
 	}
 
 	@GET
 	@Path("/getAll")
 	public String getAll() throws IOException, TimeoutException {
-				
+
 		String uri = "";
-		
+
 		boolean notFinished = true;
 		int counter = 3;
 		while (notFinished) {
-			
+
 			Session session = sessionFactory.openSession();
 			session.beginTransaction();
-			
+
 			Query q = session.createQuery("FROM Error e WHERE e.reportUrlDate = NULL");
-//			q.setMaxResults(1);
-			
+			// q.setMaxResults(1);
+
 			List<cz.wa2.entity.Error> errors = q.list();
-			
+
 			boolean generate = false;
-			
-			if(errors.isEmpty()) {
+
+			if (errors.isEmpty()) {
 				q = session.createQuery("FROM Error e ORDER BY e.reportUrlDate DESC");
 				q.setMaxResults(1);
-				
+
 				errors = q.list();
-				
-				if(errors.isEmpty()) {
-					//no errors in the database, generates an empty report
+
+				if (errors.isEmpty()) {
+					// no errors in the database, generates an empty report
 					notFinished = false;
 					generate = true;
 				} else {
-					
+
 					cz.wa2.entity.Error error = errors.get(0);
 					String reportUrl = error.getReportUrl();
-					
-					if(reportUrl == null)
+
+					if (reportUrl == null)
 						generate = true;
 					else {
-						//TODO: check if file exists. If true, send the url (don't forget the localhost etc). Else generate
-						//TODO: and don't forget to commit and close the session
-						
+						uri = FILE_STERVER + reportUrl;
+						URL u = new URL(uri);
+						HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+						huc.setRequestMethod("GET");
+						huc.connect();
+						int code = huc.getResponseCode();
+						if (code != 200) {
+							generate = true;
+						}
 						session.getTransaction().commit();
-						session.close();						
-						return "http://localhost:8083" + reportUrl;
-					}				
+						session.close();
+						if (code == 200) {
+							return uri;
+						}
+					}
 				}
 			} else {
-
 				generate = true;
 			}
-			
-			if(generate) {
+
+			if (generate) {
 				UUID dataPath = UUID.randomUUID();
 				uri = "/data/" + dataPath + ".txt";
-				
+
 				try {
-					for(cz.wa2.entity.Error error : errors) {
+					for (cz.wa2.entity.Error error : errors) {
 						error.setReportUrl(uri);
-						error.setReportUrlDate(new Date());	
+						error.setReportUrlDate(new Date());
 						session.merge(error);
-					}		
+					}
 					session.getTransaction().commit();
 					notFinished = false;
 				} catch (StaleStateException e) {
 					session.getTransaction().rollback();
-					if (counter > 0) {			
+					if (counter > 0) {
 						--counter;
 						continue;
-					} //in else case it just gives up on caching it
+					} // in else case it just gives up on caching it
 				} finally {
 					session.close();
-				}	
-				
+				}
+
 				ConnectionFactory factory = new ConnectionFactory();
 				factory.setHost("localhost");
 				Connection connection = factory.newConnection();
@@ -320,12 +338,12 @@ public class MainController {
 				channel.close();
 				connection.close();
 			}
-			
-			if(session.isOpen())
+
+			if (session.isOpen())
 				session.close();
 		}
 
-		return "http://localhost:8083" + uri;
+		return FILE_STERVER + uri;
 	}
 
 	@GET
@@ -406,7 +424,7 @@ public class MainController {
 				if (counter <= 0)
 					return Response.status(Status.INTERNAL_SERVER_ERROR)
 							.entity("Server failed to to update the error")
-							.build();				
+							.build();
 				--counter;
 				continue;
 			} finally {
@@ -416,5 +434,13 @@ public class MainController {
 		}
 
 		return Response.ok().build();
+	}
+
+	private static final Random rnd = new Random();
+
+	@GET
+	@Path("/getLoad")
+	public Integer getLoad() {
+		return rnd.nextInt(100);
 	}
 }
