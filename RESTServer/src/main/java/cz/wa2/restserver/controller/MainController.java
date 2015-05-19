@@ -179,14 +179,23 @@ public class MainController {
 				URL u = new URL(uri);
 				HttpURLConnection huc = (HttpURLConnection) u.openConnection();
 				huc.setRequestMethod("GET");
-				huc.connect();
+				
+				try {
+					huc.connect();
+				} catch(IOException ex) {
+					session.getTransaction().rollback();
+					session.close();
+					throw ex;
+				} finally {
+					huc.disconnect();
+				}
+				
 				int code = huc.getResponseCode();
 				if (code != 200) {
 					generate = true;
-				}
-				session.getTransaction().commit();
-				session.close();
-				if (code == 200) {
+				} else {
+					session.getTransaction().commit();
+					session.close();
 					return uri;
 				}
 			}
@@ -281,14 +290,23 @@ public class MainController {
 						URL u = new URL(uri);
 						HttpURLConnection huc = (HttpURLConnection) u.openConnection();
 						huc.setRequestMethod("GET");
-						huc.connect();
+						
+						try {
+							huc.connect();
+						} catch(IOException ex) {
+							session.getTransaction().rollback();
+							session.close();
+							throw ex;
+						} finally {
+							huc.disconnect();
+						}
+						
 						int code = huc.getResponseCode();
 						if (code != 200) {
 							generate = true;
-						}
-						session.getTransaction().commit();
-						session.close();
-						if (code == 200) {
+						} else {
+							session.getTransaction().commit();
+							session.close();
 							return uri;
 						}
 					}
