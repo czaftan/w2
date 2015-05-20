@@ -1,10 +1,13 @@
 package cz.wa2.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +26,9 @@ public class User {
 	
 	@Column(name = "fqn")
 	private String fqn;
+	
+	@ManyToMany(mappedBy = "candidates")
+	private List<cz.wa2.entity.Error> errors;
 
 	public Long getId() {
 		return id;
@@ -60,5 +66,15 @@ public class User {
 	public String toString() {
 		return fqn + "(" + email + ")";
 	}
+
+	public List<cz.wa2.entity.Error> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<cz.wa2.entity.Error> errors) {
+		this.errors = errors;
+	}
+	
+	
 
 }

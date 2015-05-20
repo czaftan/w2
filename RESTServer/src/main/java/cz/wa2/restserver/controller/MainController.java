@@ -43,7 +43,6 @@ public class MainController {
 	private static final String PUBLISH_IMAGE_TASK_QUEUE = "publish_image";
 	private static final String PUBLISH_ERRORS_TASK_QUEUE = "publish_error";
 	private static final String FILE_STERVER = "http://localhost:8083";
-	private static final int CACHE_TIME_MINUTES = 5;
 
 	private StandardServiceRegistry serviceRegistry;
 	private SessionFactory sessionFactory;
@@ -127,6 +126,13 @@ public class MainController {
 			session.persist(page);
 		} else
 			page = pageList.get(0);
+		
+		if(!page.getApplication().equals(app)) {
+			session.getTransaction().rollback();
+			session.close();
+			return Response.status(Status.BAD_REQUEST)
+					.entity("Page already exists but under different application: " + application).build();
+		}
 
 		cz.wa2.entity.Error error = new cz.wa2.entity.Error();
 		error.setMessage(errorDescription);

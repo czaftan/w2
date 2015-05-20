@@ -8,6 +8,8 @@ import java.io.Writer;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -77,10 +79,14 @@ public class Main {
 		String uri = msg.getString("uri");
 
 		Session session = sessionFactory.openSession();
+		
+//		Query query = session.createQuery("FROM Error");
+		
+		Criteria q = session.createCriteria(cz.wa2.entity.Error.class);
+		q.setFetchMode("user", FetchMode.JOIN);
+		q.setFetchMode("page", FetchMode.JOIN);
 
-		Query query = session.createQuery("FROM Error");
-
-		List<cz.wa2.entity.Error> errors = query.list();
+		List<cz.wa2.entity.Error> errors = q.list();
 
 		session.close();
 

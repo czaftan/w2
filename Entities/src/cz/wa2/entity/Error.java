@@ -1,13 +1,19 @@
 package cz.wa2.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -26,7 +32,7 @@ public class Error {
 	@Column(name = "message", nullable = true)
 	private String message;
 	
-	@OneToOne
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private User user;
 	
@@ -39,7 +45,7 @@ public class Error {
 	@Column(name = "screenshot", nullable = true)
 	private String screenshot;
 	
-	@OneToOne
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "page_id")
 	private Page page;
 	
@@ -63,6 +69,10 @@ public class Error {
 	@Version
 	@Column(name = "optlock")
 	private Integer optlock;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="", joinColumns=@JoinColumn(name=""), inverseJoinColumns=@JoinColumn(name=""))
+	private List<User> candidates;
 
 	public Long getId() {
 		return id;
@@ -167,5 +177,15 @@ public class Error {
 	public void setOptlock(Integer optlock) {
 		this.optlock = optlock;
 	}
+
+	public List<User> getCandidates() {
+		return candidates;
+	}
+
+	public void setCandidates(List<User> candidates) {
+		this.candidates = candidates;
+	}
+	
+	
 
 }
