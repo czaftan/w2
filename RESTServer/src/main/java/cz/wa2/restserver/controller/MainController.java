@@ -64,9 +64,11 @@ public class MainController {
 		String errorDescription = obj.getString("Chyba");
 		String pageUrl = obj.getString("page");
 		String application = obj.getString("application");
+		String comment = obj.optString("comment", null);
+		String title = obj.optString("title");
 		String email = "dummy@example.com";
 		// hash should be 6e8e0bf6135471802a63a17c5e74ddc5
-		String title = "";
+		
 
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -142,6 +144,7 @@ public class MainController {
 		error.setPage(page);
 		error.setUser(user);
 		error.setScreenshot(base64img);
+		error.setComment(comment);
 		error.setReportUrlDate(null);
 		error.setScreenUrlDate(null);
 

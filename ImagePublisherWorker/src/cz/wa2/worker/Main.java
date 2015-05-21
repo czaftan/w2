@@ -70,7 +70,6 @@ public class Main {
 		JSONObject msg = new JSONObject(message);
 		Long id = msg.getLong("id");
 		String uri = msg.getString("uri");
-		// TODO: get screenshot z DB podle id
 		
 		Session session = sessionFactory.openSession();
         
@@ -102,6 +101,34 @@ public class Main {
 		factory.setHost("localhost");
 		Connection connection = null;
 		Channel channel = null;
+		
+		// we have to get rid of the url cache entry. We don't know which error has the entry, we have to guess
+		// we might hit a different error, but this way at least another request will be generated
+		Session session = null;
+		try {
+			JSONObject msg = new JSONObject(message);
+			Long id = msg.getLong("id");
+			
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			cz.wa2.entity.Error error;
+        	error = (cz.wa2.entity.Error) session.get(
+					cz.wa2.entity.Error.class, id);
+
+        	if(error != null) {
+				error.setScreenUrlDate(null);
+				session.merge(error);
+        	}
+				
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			if(session.getTransaction().isActive())
+				session.getTransaction().rollback();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
 		try {
 			connection = factory.newConnection();
 			channel = connection.createChannel();
