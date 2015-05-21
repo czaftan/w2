@@ -10,6 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -149,7 +150,32 @@ public class Main {
 		factory.setHost("localhost");
 		Connection connection = null;
 		Channel channel = null;
+		
+		// we have to get rid of the url cache entry. We don't know which error has the entry, we have to guess
+		// we might hit a different error, but this way at least another request will be generated
+		Session session = null;
 		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			Query q = session.createQuery("FROM Error e ORDER BY e.reportUrlDate DESC");
+			q.setMaxResults(1);
+			List<cz.wa2.entity.Error> errors = q.list();
+			if(!errors.isEmpty()) {
+				cz.wa2.entity.Error error = errors.get(0);
+				error.setReportUrlDate(null);
+				session.merge(error);
+			}
+			session.getTransaction().commit();
+		} catch(Exception e) {
+			if(session.getTransaction().isActive())
+				session.getTransaction().rollback();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		
+		try {	
 			connection = factory.newConnection();
 			channel = connection.createChannel();
 			channel.queueDeclare(POISONED_TASK_QUEUE, true, false, false, null);
