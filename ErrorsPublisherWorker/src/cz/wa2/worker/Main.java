@@ -10,7 +10,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -24,6 +23,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import com.rabbitmq.client.QueueingConsumer;
+
+import cz.wa2.entity.User;
 
 public class Main {
 
@@ -79,12 +80,13 @@ public class Main {
 		String uri = msg.getString("uri");
 
 		Session session = sessionFactory.openSession();
-		
-//		Query query = session.createQuery("FROM Error");
-		
+
+		// Query query = session.createQuery("FROM Error");
+
 		Criteria q = session.createCriteria(cz.wa2.entity.Error.class);
 		q.setFetchMode("user", FetchMode.JOIN);
 		q.setFetchMode("page", FetchMode.JOIN);
+		q.setFetchMode("candidates", FetchMode.JOIN);
 
 		List<cz.wa2.entity.Error> errors = q.list();
 
@@ -101,6 +103,14 @@ public class Main {
 			row.put(e.getPage().getApplication().toString());
 			row.put(e.getUser().toString());
 			row.put(e.getComment());
+			String candidates = "";
+			if (e.getCandidates().size() > 0) {
+				for (User c : e.getCandidates()) {
+					candidates += ", " + c.toString();
+				}
+				candidates = candidates.substring(1, candidates.length());
+			}
+			row.put(candidates);
 			// Tohle by se melo generovat na klientovi, ale takhle je to
 			// jednodussi :-)
 

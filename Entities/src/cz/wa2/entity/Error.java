@@ -71,7 +71,7 @@ public class Error {
 	private Integer optlock;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="", joinColumns=@JoinColumn(name=""), inverseJoinColumns=@JoinColumn(name=""))
+	@JoinTable(name="Candidates", joinColumns=@JoinColumn(name="error_id"), inverseJoinColumns=@JoinColumn(name="user_id"))
 	private List<User> candidates;
 
 	public Long getId() {

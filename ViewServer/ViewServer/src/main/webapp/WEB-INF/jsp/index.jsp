@@ -91,6 +91,7 @@
 				<th>Application</th>
 				<th>User</th>
 				<th>Comment</th>
+				<th>Candidates</th>
 				<th>Screenshot</th>
 				<th>Cancel</th>
 				<th>Resolve</th>

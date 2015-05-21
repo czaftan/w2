@@ -150,7 +150,7 @@ public class MainController {
 		session.getTransaction().commit();
 		session.close();
 
-		return Response.ok().build();
+		return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	@GET
