@@ -72,7 +72,7 @@ public class Main {
 		String uri = msg.getString("uri");
 		
 		Session session = sessionFactory.openSession();
-        
+        session.beginTransaction();
 //        Query query = session.createQuery("FROM Error E WHERE E.id = " + id);
 //        query.setMaxResults(1);
 //        List<cz.wa2.entity.Error> errors = query.list();
@@ -81,6 +81,8 @@ public class Main {
         cz.wa2.entity.Error error;
         	error = (cz.wa2.entity.Error) session.get(
 					cz.wa2.entity.Error.class, id);
+        	
+        session.getTransaction().commit();
     	session.close();
 
     	if(error == null)

@@ -81,7 +81,7 @@ public class Main {
 		String uri = msg.getString("uri");
 
 		Session session = sessionFactory.openSession();
-
+		session.beginTransaction();
 		// Query query = session.createQuery("FROM Error");
 
 		Criteria q = session.createCriteria(cz.wa2.entity.Error.class);
@@ -90,7 +90,7 @@ public class Main {
 		q.setFetchMode("candidates", FetchMode.JOIN);
 
 		List<cz.wa2.entity.Error> errors = q.list();
-
+		session.getTransaction().commit();
 		session.close();
 
 		JSONArray data = new JSONArray();

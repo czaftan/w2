@@ -173,7 +173,7 @@ public class MainController {
 
 			cz.wa2.entity.Error error = (cz.wa2.entity.Error) session.get(cz.wa2.entity.Error.class, errorId);
 
-			if (error.getScreenshot() == null) {
+			if (error == null && error.getScreenshot() == null) {
 				// no screenshot to generate
 				session.getTransaction().commit();
 				session.close();

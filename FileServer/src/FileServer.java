@@ -98,8 +98,9 @@ public class FileServer {
 						path = path + "index.html";
 						f = new File(path);
 					}
+					InputStream file = null;
 					try {
-						InputStream file = new FileInputStream(f);
+						file = new FileInputStream(f);
 						String contenttype =
 								URLConnection.guessContentTypeFromName(path);
 						pout.print("HTTP/1.0 200 OK\r\n");
@@ -114,6 +115,9 @@ public class FileServer {
 						errorReport(pout, con, "404", "Not Found",
 								"The requested URL was not found " +
 										"on this server.");
+					} finally {
+						if(file != null)
+							file.close();
 					}
 				}
 			}
