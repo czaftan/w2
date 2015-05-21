@@ -88,6 +88,7 @@ public class Main {
     		throw new WorkerException();
 		
 		String image = error.getScreenshot();
+		image = image.split(",")[1];
 		byte[] data = image == null || image.isEmpty() ? new byte[0] : Base64.decodeBase64(image);
 		try (OutputStream stream = new FileOutputStream("../publish/" + uri)) {
 			stream.write(data);

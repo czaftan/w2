@@ -41,7 +41,7 @@
 		var id = self.attr("id");
 		getPicture(id);
 	});
-	
+
 	$(document).on("click", "button.resolve", function() {
 		var self = $(this);
 		var id = self.attr("id");
@@ -52,7 +52,7 @@
 			}
 		});
 	});
-	
+
 	$(document).on("click", "button.cancel", function() {
 		var self = $(this);
 		var id = self.attr("id");
@@ -63,17 +63,25 @@
 			}
 		});
 	});
-	
+
 	function getPicture(id) {
 		$.ajax({
 			url : "getPicture?id=" + id,
-			success : function(data) {
+		}).done(function(data) {
+			tryGetPicture(data);
+		});
+	}
+	function tryGetPicture(data) {
+		$.ajax({
+			url : data,
+			crossDomain : true,
+			success : function() {
 				$("#img").attr("src", data);
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				if (xhr.status == 404) {
+				if (xhr.status == 404 || xhr.status == 0) {
 					setTimeout(function() {
-						getPicture(id);
+						tryGetPicture(data);
 					}, 1000);
 				}
 			}

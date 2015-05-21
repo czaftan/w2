@@ -42,11 +42,10 @@ public class MainController {
 	}
 
 	@RequestMapping("/getPicture")
-	public String getPicture(@RequestParam(value = "id") String id) {
+	public ResponseEntity<String> getPicture(@RequestParam(value = "id") String id) {
 		RestTemplate restTemplate = new RestTemplate();
-		// Link page = restTemplate.getForObject(serverLink + "getPicture?id=" + id, Link.class);
-		// return page.getLink();
-		return "";
+		ResponseEntity<String> confirm = restTemplate.getForEntity(getLeastLoadServer() + "getPicture/" + id, String.class);
+		return confirm;
 	}
 
 	@RequestMapping("/delete")
@@ -59,7 +58,10 @@ public class MainController {
 	@RequestMapping("/resolve")
 	public ResponseEntity<String> resolve(@RequestParam(value = "id") String id) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> confirm = restTemplate.getForEntity(getLeastLoadServer() + "resolve/" + id, String.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Access-Control-Allow-Origin", "*");
+		HttpEntity entity = new HttpEntity(headers);
+		ResponseEntity<String> confirm = restTemplate.exchange(getLeastLoadServer() + "resolve/" + id, HttpMethod.GET, entity, String.class);
 		return confirm;
 	}
 
